@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse_map_matrix.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crocha-s <crocha-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 17:42:26 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/10/23 16:20:11 by crocha-s         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:16:21 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
 static int	check_numbers(t_game *game, int player_count, int garbage)
 {

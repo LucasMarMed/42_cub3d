@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   player_direction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crocha-s <crocha-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:07:29 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/10/23 16:27:19 by crocha-s         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:16:18 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
 void	player_direction(t_game *game)
 {

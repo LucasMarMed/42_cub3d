@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   convert_data_map.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crocha-s <crocha-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 19:52:08 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/10/23 16:33:10 by crocha-s         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:34:43 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
 int	rgb_to_hex(int *rgb)
 {
 	int	color;
 
-	color = (rgb[0] << 16 | rgb[1] << 8
-			| rgb[2]);
+	color = (rgb[0] << 16 |
+			 rgb[1] << 8 | 
+			 rgb[2]);
 	return (color);
 }
 

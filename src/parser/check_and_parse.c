@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   check_and_parse.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crocha-s <crocha-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 19:06:26 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/10/20 17:17:20 by crocha-s         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:16:32 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
 static int	size_of_file(int fd, char *buffer, int read_bytes)
 {

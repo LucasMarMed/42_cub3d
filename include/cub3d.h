@@ -16,165 +16,168 @@
 # include "../libft/libft.h"
 # include "../MLX42/include/MLX42/MLX42.h"
 
-# include <fcntl.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <errno.h>
-# include <string.h>
-# include <term.h>
-# include <math.h>
-
-# define GREEN "\033[1m\033[32m"
-# define RED "\033[1m\033[31m"
-# define BLUE "\033[0;34m"
-# define WHITE "\033[0;37m"
-# define RESET "\033[0m"
-
+# define BUFF 50
+# define NBR_TEXTURES 4
+# define DIRECTIONS "NO,SO,EA,WE"
+# define COLOR_PLACE "F ,C "
 # define WIDTH 800
 # define HEIGHT 600
-# define MINI_WIDTH 200
-# define MINI_HEIGHT 200
-# define ROTATE_LEFT -0.5
-# define ROTATE_RIGHT 0.5
+# define SPRITE_SIZE 64
+# define SPEED 0.025
+# define ROTATION_SPEED 20
+# define BUFFER_DISTANCE 0.1
 
-# define SPACES " \t\n\v\f\r"
-# define OPERATORS "<|>"
+# define PI 3.14159265358
 
-# define BAD_OP "|&;()"
-# define UNSUPPORT "&*(){};\\"
-# define NOT_EXP "|></ \t\n\v\f\r"
+# define ESC 65307
+# define W 119
+# define A 97
+# define S 115
+# define D 100
+# define LEFT 65361
+# define RIGHT 65363
 
-# define ERROR_HEAD "minishell: "
-# define ERROR_QUOTE "unclosed quotes"
-# define ERROR_SYNTAX "syntax error near unexpected token `"
-# define ERROR_HERE_DOC "unexpected EOF while looking for matching `"
-# define ERROR_OPT "options are not supprted"
+# define NO 0
+# define SO 1
+# define EA 2
+# define WE 3
+# define F 	4
+# define C 	5
 
-# define SIGRESTORE 1
-# define SIGHEREDOC 2
-# define SIGCHILD 3
-# define SIGIGNORE 4
 
-typedef struct s_env
+typedef struct s_coord
 {
-	char	**e_name;
-	char	**e_content;
-	int		size_env;
-}				t_env;
+	double	x;
+	double	y;
+}	t_coord;
 
-typedef struct s_cmd
+typedef struct s_rays
 {
-	int	type;
-}				t_cmd;
+	t_coord		direction;
+	t_coord		delta;
+	t_coord		intersection;
+	t_coord		map_mov;
+	bool		hit_vertical;
+	double		perp_wall_dist;
+}	t_rays;
 
-typedef struct s_pipe
+typedef struct s_dda
 {
-	int		type;
-	t_cmd	*left;
-	t_cmd	*right;
-}				t_pipe;
+	double		camera_x;
+	t_coord		ray_dir;
+	t_coord		delta_dist;
+	t_coord		side_dist;
+	t_coord		map_pos;
+	t_coord		step;
+	int			hit;
+	int			side;
+	double		perp_wall_dist;
+}	t_dda;
 
-typedef struct s_redir
+typedef struct s_plane
 {
-	int		type;
-	t_cmd	*cmd;
-	char	*file;
-	int		mode;
-	int		fd;
-}				t_redir;
+	t_coord		pos;
+	double		angle;
+}	t_plane;
 
-typedef struct s_here
+typedef struct s_player
 {
-	int		type;
-	char	*eof;
-	int		mode;
-	int		fdin;
-	int		fdout;
-	t_cmd	*cmd;
-}				t_here;
+	char	fov; // field of view
+	t_coord	dir; //dir fov
+	t_plane	plane;
+	t_coord movement; //?
+	double	move_speed;
+	double	rot_speed;
+	int		img_index;
+	double	hit_dist;
+	double	hit_x;
+	int		pitch;
+	t_coord	pos; //map position
+	double		angle;
+	int			int_pos_x;
+	int			int_pos_y;
+}	t_player;
 
-typedef struct s_exec
+typedef struct s_map
 {
-	int		type;
-	char	*argv[MAXARGS];
-}				t_exec;
+	char	**map_matrix;
+	char	*no_texture;
+	char	*so_texture;
+	char	*we_texture;
+	char	*ea_texture;
+	int		floor[3];
+	int		ceiling[3];
+	int		f_color; //
+	int		c_color;
+	int		n_lines;
+	int		width;
+}	t_map;
 
-typedef struct s_shell
+typedef struct s_image
 {
-	char	*user_line;
-	int		size_line;
-	char	*ps;
-	char	*es;
-	t_env	env;
-	char	**envp;
-	char	**paths;
-	t_cmd	*cmd;
-	int		status;
-	int		pid;
-	int		exec_cmd;
-	char	*oldpwd;
-}				t_shell;
+	void		*img_ptr;
+	char		*address;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}	t_image;
 
-// env_and_export
-void				init_shell_and_env(t_shell *shell, t_env *env);
-void				update_env(t_env *env, char *name, char *new_value);
-char				*env_get(t_env *env, char *name);
-void				selection_sort_env(t_env *env, int i, int j);
+typedef struct s_img_info
+{
+	double		line_height;
+	int			draw_start;
+	int			draw_end;
+	double		pos_texture;
+	double		scale;
+	int			tex_x;
+}	t_img_info;
 
-// expand
-void				expand_arg(t_shell *shell, char **arg);
-int					expand_free(char *key, int i, int j, char **line);
-int					expand(char *key, int i, int j, char **line);
-void				trim_quotes(char *arg, int *len);
-void				arg_insert_null(char *arg);
+typedef struct s_render
+{
+	t_image		image;
+	int			height;
+	int			width;
+	int			index;
+}	t_render;
 
-// process_line file
-int					prepare_line(t_shell *shell);
+typedef struct s_game
+{
+	char		*file;
+	t_map		*map;
+	t_player	*player;
+	void		*mlx;
+	void		*win;
+	t_render	render[4];
+	int			key;
+	t_render	*texture;
+	t_image		 img;
+	t_img_info	img_info;
+	t_rays		ray;
+}	t_game;
 
-// parser
-t_cmd				*mk_exec(void);
-t_cmd				*mk_pipe(t_cmd *left, t_cmd *right);
-t_cmd				*mk_redir(char *file, int mode, int fd, t_cmd *cmd);
-t_cmd				*mk_here(char *eof, t_cmd *cmd);
-int					parse(t_shell *shell);
-int					peek(t_shell *shell, char *op);
-int					gettoken(t_shell *sh, char **token);
-t_cmd				*parsepipe(t_shell *shell);
-
-// run_cmd
-void				run_cmd(t_shell *shell, t_cmd *cmd);
-void				run_exec(t_shell *shell, t_exec *cmd);
-void				run_redir(t_shell *shell, t_redir *cmd);
-void				check(int result, char *msg, int exit);
-int					check_fork(void);
-void				run_heredoc(t_shell *shell, t_here *here);
-
-// built-in
-int					run_builtin(t_shell *shell, t_exec *cmd);
-void				ms_echo(t_exec *cmd);
-void				ms_cd(t_shell *shell, t_exec *cmd);
-bool				ms_chdir(t_shell *shell, char *path);
-void				ms_pwd(t_shell *shell, t_exec *cmd);
-void				ms_export(t_shell *shell, t_exec *cmd);
-void				ms_unset(t_shell *shell, t_exec *cmd);
-void				ms_env(t_shell *shell, t_exec *cmd);
-void				ms_exit(t_shell *shell, t_exec *cmd);
-
-// sig
-void				signal_handler(int sig);
-
-// error_frees
-int					print_error_syntax(t_shell *shell, char *msg, int exit);
-int					print_error(t_shell *shell, char *msg, char *msg2,
-						int exit);
-int					print_error_unsupport(t_shell *sh, char *msg, int exit);
-int					print_error_export(t_shell *sh, char *cmd, char *arg,
-						int exit);
-void				free_exit(t_shell *shell);
-void				free_env(t_env *env);
-void				free_cmd(t_cmd *cmd);
-void				free_split(char **split);
-void				clean_exit(t_shell *shell);
+int		check_and_parse(t_game *game, char **path);
+int		convert_data_map(t_game *game, char *temp_raw_map);
+int		check_tex_path(t_game *game, char **path);
+int		parse_map_matrix(char** map_line, t_game *game);
+int		flood_fill(char **map_line, t_game *game);
+char	getchr(const char *s, int c);
+void		free_structs(t_game *game);
+void	free_arr(char **arr);
+int		ft_print_err(char *err);
+t_render	set_images(t_game *cub3d, char *texture);
+int		make_game(t_game *cub3d);
+void	movements(t_game *game);
+void	generate_image(t_game *cub3d);
+void	texture_calc(t_game *game);
+void	ft_color(t_game *game, int i, char flag);
+void	ft_textures(t_game *game, int i);
+void	ft_init_player_pos(t_game *game);
+void	free_arr(char **arr);
+void	ft_raycast(t_game *game);
+void	ft_perror(char *msg, t_game *game);
+int		end_game(t_game *game);
+int		ft_keypress(int keycode, t_game *game);
+int		ft_keyrelease(int keycode, t_game *game);
+int		arr_len(char **arr);
 
 #endif

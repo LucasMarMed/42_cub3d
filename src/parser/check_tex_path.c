@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   check_tex_path.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crocha-s <crocha-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 21:24:49 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/10/20 15:07:43 by crocha-s         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:16:36 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/cub3d.h"
+#include "../../include/cub3d.h"
 
 static void	set_textures(t_game *game, char *temp, char *direction)
 {

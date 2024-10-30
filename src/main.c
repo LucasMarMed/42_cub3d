@@ -92,4 +92,5 @@ int	main(int argc, char **argv)
 	validate_map(argc, argv, &game);
 	init_game(&game);
 	return (EXIT_SUCCESS);
+	
 }
