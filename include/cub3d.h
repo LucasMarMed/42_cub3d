@@ -5,16 +5,20 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/04 16:14:01 by lumarque          #+#    #+#             */
-/*   Updated: 2024/10/04 16:14:01 by lumarque         ###   ########.fr       */
+/*   Created: 2024/08/28 19:58:16 by crocha-s          #+#    #+#             */
+/*   Updated: 2024/11/14 00:59:25 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include "../minilibx-linux/mlx.h"
+# include "../minilibx-linux/mlx_int.h"
 # include "../libft/libft.h"
-# include "../MLX42/include/MLX42/MLX42.h"
+# include <assert.h>
+# include <stdbool.h>
+# include <math.h>
 
 # define BUFF 50
 # define NBR_TEXTURES 4
@@ -23,8 +27,8 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define SPRITE_SIZE 64
-# define SPEED 0.025
-# define ROTATION_SPEED 20
+# define SPEED 0.09
+# define ROTATION_SPEED 3
 # define BUFFER_DISTANCE 0.1
 
 # define PI 3.14159265358
@@ -44,22 +48,11 @@
 # define F 	4
 # define C 	5
 
-
 typedef struct s_coord
 {
 	double	x;
 	double	y;
 }	t_coord;
-
-typedef struct s_rays
-{
-	t_coord		direction;
-	t_coord		delta;
-	t_coord		intersection;
-	t_coord		map_mov;
-	bool		hit_vertical;
-	double		perp_wall_dist;
-}	t_rays;
 
 typedef struct s_dda
 {
@@ -82,20 +75,18 @@ typedef struct s_plane
 
 typedef struct s_player
 {
-	char	fov; // field of view
-	t_coord	dir; //dir fov
+	char	fov;
+	t_coord	dir;
 	t_plane	plane;
-	t_coord movement; //?
+	t_coord movement;
+	t_coord	pos;
 	double	move_speed;
 	double	rot_speed;
 	int		img_index;
 	double	hit_dist;
 	double	hit_x;
 	int		pitch;
-	t_coord	pos; //map position
 	double		angle;
-	int			int_pos_x;
-	int			int_pos_y;
 }	t_player;
 
 typedef struct s_map
@@ -107,7 +98,7 @@ typedef struct s_map
 	char	*ea_texture;
 	int		floor[3];
 	int		ceiling[3];
-	int		f_color; //
+	int		f_color;
 	int		c_color;
 	int		n_lines;
 	int		width;
@@ -122,6 +113,14 @@ typedef struct s_image
 	int			endian;
 }	t_image;
 
+typedef struct s_render
+{
+	t_image		image;
+	int			height;
+	int			width;
+	int			index;
+}	t_render;
+
 typedef struct s_img_info
 {
 	double		line_height;
@@ -132,13 +131,16 @@ typedef struct s_img_info
 	int			tex_x;
 }	t_img_info;
 
-typedef struct s_render
+typedef struct s_rays
 {
-	t_image		image;
-	int			height;
-	int			width;
-	int			index;
-}	t_render;
+	t_coord		direction;
+	t_coord		delta;
+	t_coord		intersection;
+	t_coord		map_mov; //step
+	t_coord		map;
+	bool		hit_vertical;
+	double		perp_wall_dist;
+}	t_rays;
 
 typedef struct s_game
 {
@@ -179,5 +181,4 @@ int		end_game(t_game *game);
 int		ft_keypress(int keycode, t_game *game);
 int		ft_keyrelease(int keycode, t_game *game);
 int		arr_len(char **arr);
-
 #endif
