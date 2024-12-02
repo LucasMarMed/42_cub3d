@@ -12,95 +12,115 @@
 
 // #include "../include/cub3d.h"
 
-// /*Populates texture variables, texture struct itself is already initialised
-//   within init_game function.*/
-// int	get_textures(t_game *game)
-// {
-// 	game->txtr->wl = mlx_load_png("./textures/black_wall_mini_map.png");
-// 	if (!game->txtr->wl)
-// 		return (1);
-// 	game->txtr->fl = mlx_load_png("./textures/white_floor_mini_map.png");
-// 	if (!game->txtr->fl)
-// 		return (1);
-// 	return (0);
-// }
+enum
+{
+	DOOR_TOGGLING = 95,
+	DOOR_OPENED,
+	DOOR_CLOSED,
+	PLAYER,
+	ENEMY_WALK,
+	ENEMY_DAMAGED,
+	ENEMY_ATTACK,
+	ENEMY_DEATH,
+};
 
-// /*Populates image variables, image struct itself is already initialised
-//   within init_game function.*/
-// int	get_images(t_game *game)
-// {
-// 	game->img->wl = mlx_texture_to_image(game->mlx, game->txtr->wl);
-// 	if (!game->img->wl)
-// 		return (1);
-// 	game->img->fl = mlx_texture_to_image(game->mlx, game->txtr->fl);
-// 	if (!game->img->fl)
-// 		return (1);
-// 	mlx_resize_image(game->img->wl, game->PX, game->PX);
-// 	mlx_resize_image(game->img->fl, game->PX, game->PX);
-// 	return (0);
-// }
 
-// /*Initialises variables of the player struct used in draw_player function.*/
-// static void	init_pl(t_pl *pl)
-// {
-// 	pl->x_strt = 0;
-// 	pl->y_strt = 0;
-// 	pl->pix_x = -1;
-// 	pl->pix_y = -1;
-// 	pl->fnl_x = 0;
-// 	pl->fnl_y = 0;
-// }
+typedef struct s_draw_minimap
+{
+	float		center_x;
+	float		center_y;
+	float		radius_x;
+	float		radius_y;
+	float		world_x;
+	float		world_y;
+	int			factor;
+	bool		top;
+	bool		bottom;
+	bool		left;
+	bool		right;
+	t_iterators	it;
+}	t_draw_minimap;
 
-// /*-strt: calculates starting position of player
-//   -fnl: translates pixel back to original position, uses round
-//    function for better accuracy*/
-// void	draw_player(t_game *game, float width, float height)
-// {
-//     t_pl	pl;
+static void	put_color(t_game *g, t_draw_minimap *s, int color)
+{
+	pixel_put(g, s->center_x + s->it.j - s->radius_x,
+		s->center_y + s->it.i - s->radius_y, color);
+}
 
-// 	init_pl(&pl);
-// 	pl.x_strt = (game->x_p * game->PX);
-// 	pl.y_strt = (game->y_p * game->PX);
-// 	while (++pl.pix_y <= height)
-// 	{
-// 		pl.pix_x = -1;
-// 		while (++pl.pix_x <= width)
-// 		{
-// 			pl.fnl_x = round(pl.x_strt + pl.pix_x);
-// 			pl.fnl_y = round(pl.y_strt + pl.pix_y);
+static void	map_check_walls(t_game *g, t_draw_minimap *s)
+{
+	s->top = ((!has_wall_at(g, s->world_x, s->world_y - s->factor)
+				|| has_door_at(g, s->world_x, s->world_y - s->factor))
+			&& !has_void_at(g, s->world_x, s->world_y - s->factor));
+	s->bottom = ((!has_wall_at(g, s->world_x, s->world_y + s->factor)
+				|| has_door_at(g, s->world_x, s->world_y + s->factor))
+			&& !has_void_at(g, s->world_x, s->world_y + s->factor));
+	s->left = ((!has_wall_at(g, s->world_x - s->factor, s->world_y)
+				|| has_door_at(g, s->world_x - s->factor, s->world_y))
+			&& !has_void_at(g, s->world_x - s->factor, s->world_y));
+	s->right = ((!has_wall_at(g, s->world_x + s->factor, s->world_y)
+				|| has_door_at(g, s->world_x + s->factor, s->world_y))
+			&& !has_void_at(g, s->world_x + s->factor, s->world_y));
+}
 
-// 			if (pl.fnl_x >= 0 && pl.fnl_x < game->width * game->PX
-// 				&& pl.fnl_y >= 0 && pl.fnl_y < game->height * game->PX)
-// 			{
-// 				mlx_put_pixel(game->img->pl, pl.fnl_x, pl.fnl_y, 0x00FF00FF);
-// 				mlx_image_to_window(game->mlx, game->img->pl, 0, 0);
-// 			}
-// 		}
-// 	}
-// }
+static bool	is_door_closed(t_game *g, t_draw_minimap *s)
+{
+	int		x;
+	int		y;
 
-// /*Builds 2d minimap (floor, wall, player).*/
-// void	build_map(t_game *game)
-// {
-// 	int		y;
-// 	int		x;
+	x = (int)(s->world_x / 64);
+	y = (int)(s->world_y / 64);
+	return (g->map.arr[y][x] == DOOR_CLOSED);
+}
 
-// 	y = -1;
-// 	x = -1;
+static void	draw_x_radius(t_game *g, t_draw_minimap *s)
+{
+	while (++s->it.j <= s->radius_x * 2)
+	{
+		if (s->it.i == 0 || s->it.j == 0
+			|| s->it.i == s->radius_y * 2 || s->it.j == s->radius_x * 2)
+			put_color(g, s, 0xFFFFFF);
+		else
+		{
+			s->world_x = g->player.pos.x + s->factor * (s->it.j - s->radius_x);
+			s->world_y = g->player.pos.y + s->factor * (s->it.i - s->radius_y);
+			if (has_void_at(g, s->world_x, s->world_y))
+				put_color(g, s, 0x000000);
+			else if (is_door_closed(g, s))
+				put_color(g, s, 0x003300);
+			else if (has_wall_at(g, s->world_x, s->world_y))
+			{
+				map_check_walls(g, s);
+				if (s->top || s->bottom || s->left || s->right)
+					put_color(g, s, 0xFFFFFF);
+				else
+					put_color(g, s, 0x000000);
+			}
+		}
+	}
+}
 
-// 	base_map(game);
-// 	get_images(game);
-// 	create_pl_img(game);
-// 	while (game->map[++y])
-// 	{
-// 		x = -1;
-// 		while (game->map[y][++x])
-// 		{
-// 			mlx_image_to_window(game->mlx, game->img->fl, x * game->PX, y * game->PX);
-// 			if (game->map[y][x] == '1')
-// 				mlx_image_to_window(game->mlx, game->img->wl, x * game->PX, y * game->PX);
-// 		}
-// 	}
-// 	game->pl_size = game->PX / MM_SIZE / 2;
-// 	draw_player(game, game->pl_size, game->pl_size);
-// }
+void	draw_minimap(t_game *g)
+{
+	t_draw_minimap	s;
+
+	s.center_x = WIDTH - 100 - 5;
+	s.center_y = 105;
+	s.radius_x = 100;
+	s.radius_y = 100;
+	s.factor = 3;
+	s.it.i = -1;
+	while (++s.it.i <= s.radius_y * 2)
+	{
+		s.it.j = -1;
+		draw_x_radius(g, &s);
+	}
+	s.it.i = -1;
+	while (++s.it.i < PLAYER_MINIMAP_HEIGHT)
+	{
+		s.it.j = -1;
+		while (++s.it.j < PLAYER_MINIMAP_WIDTH)
+			pixel_put(g, s.center_x + s.it.j - PLAYER_MINIMAP_WIDTH / 2,
+				s.center_y + s.it.i - PLAYER_MINIMAP_HEIGHT / 2, 0xFF0000);
+	}
+}

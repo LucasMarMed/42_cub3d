@@ -37,5 +37,6 @@ int	make_game(t_game *cub3d)
 		movements(cub3d);
 	generate_image(cub3d);
 	raycast(cub3d);
+	draw_minimap(cub3d)
 	return (EXIT_SUCCESS);
 }
