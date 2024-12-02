@@ -6,13 +6,11 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:38:53 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/11/12 22:17:03 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:53:30 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
-
-
 
 int	ft_check_buffer_zone(t_game *game, t_coord new_pos)
 {
@@ -23,7 +21,7 @@ int	ft_check_buffer_zone(t_game *game, t_coord new_pos)
 	int		map_y;
 
 	angle = 0;
-	if (angle < 2 * PI)
+	while (angle < 2 * PI)
 	{
 		check_x = new_pos.x + cos(angle) * BUFFER_DISTANCE;
 		check_y = new_pos.y + sin(angle) * BUFFER_DISTANCE;

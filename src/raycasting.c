@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 16:20:18 by lumarque          #+#    #+#             */
-/*   Updated: 2024/11/12 15:04:49 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:48:58 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,24 @@ void	ft_ray_setup(t_game *game, int pixel)
 	double	multiplier;
 
 	multiplier = 2 * pixel / (double)WIDTH - 1;
-
 	game->ray.direction.x = game->player->dir.x
 		+ game->player->plane.pos.x * multiplier;
 	if (game->ray.direction.x == 0)
 		game->ray.delta.x = 1e30;
 	else
 		game->ray.delta.x = fabs(1 / game->ray.direction.x);
-		
 	game->ray.direction.y = game->player->dir.y
 		+ game->player->plane.pos.y * multiplier;
 	if (game->ray.direction.y == 0)
 		game->ray.delta.y = 1e30;
 	else
 		game->ray.delta.y = fabs(1 / game->ray.direction.y);
-		
 	game->ray.map.x = (int)game->player->pos.x;
 	game->ray.map.y = (int)game->player->pos.y;
 	ft_ray_intersections(game);
 }
 
-void	ft_dda(t_game *game)
+void	dda(t_game *game)
 {
 	int	hit_flag;
 
@@ -114,7 +111,7 @@ void	ft_distance_to_the_wall(t_game *game)
 			+ game->img_info.line_height / 2) * game->img_info.scale;
 }
 
-void	ft_raycast(t_game *game)
+void	raycast(t_game *game)
 {
 	int	pixel;
 
@@ -123,12 +120,12 @@ void	ft_raycast(t_game *game)
 	while (++pixel <= ((int)WIDTH - 1))
 	{
 		ft_ray_setup(game, pixel);
-		ft_dda(game);
+		dda(game);
 		ft_distance_to_the_wall(game);
 		texture_calc(game);
-		ft_color(game, pixel, 'c');
+		ft_putcolor(game, pixel, 'c');
 		ft_textures(game, pixel);
-		ft_color(game, pixel, 'f');
+		ft_putcolor(game, pixel, 'f');
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img_ptr, 0, 0);
 	mlx_destroy_image(game->mlx, game->img.img_ptr);

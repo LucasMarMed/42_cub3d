@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 17:42:26 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/11/01 16:07:46 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:54:11 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ static int	get_dir_and_fov(t_game *game, int player_count, int garbage)
 			c = game->map->map_matrix[i][j];
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W')
 			{
-				game->player->pos.y = i;
-				game->player->pos.x = j;
+				game->player->pos.y = i + (2 * BUFFER_DISTANCE);
+				game->player->pos.x = j + (2 * BUFFER_DISTANCE);
 				game->player->fov = c;
 				game->map->map_matrix[i][j] = '0';
 				player_count++;
@@ -51,13 +51,10 @@ static int	get_dir_and_fov(t_game *game, int player_count, int garbage)
 
 int	parse_map_matrix(char **map_line, t_game *game)
 {
-	// int	i;
-	// int	j;
 	int	player_count;
 	int	garbage;
 
 	player_count = 0;
-	// i = 0;
 	garbage = 0;
 	if (flood_fill(map_line + 6, game) != 0)
 		return (1);

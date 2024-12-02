@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   image.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crocha-s <crocha-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:30:18 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/10/19 18:18:04 by crocha-s         ###   ########.fr       */
+/*   Updated: 2024/11/28 00:59:44 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_textures(t_game *game, int i)
 	}
 }
 
-void	ft_color(t_game *game, int i, char flag)
+void	ft_putcolor(t_game *game, int i, char flag)
 {
 	int	y;
 

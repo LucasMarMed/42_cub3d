@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 19:58:16 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/11/14 00:59:25 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:19:00 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define SPRITE_SIZE 64
-# define SPEED 0.09
-# define ROTATION_SPEED 3
-# define BUFFER_DISTANCE 0.1
+# define SPEED 0.1f
+# define ROTATION_SPEED 5
+# define BUFFER_DISTANCE 0.1f
 
 # define PI 3.14159265358
 
@@ -163,7 +163,7 @@ int		check_tex_path(t_game *game, char **path);
 int		parse_map_matrix(char** map_line, t_game *game);
 int		flood_fill(char **map_line, t_game *game);
 char	getchr(const char *s, int c);
-void		free_structs(t_game *game);
+void	free_structs(t_game *game);
 void	free_arr(char **arr);
 int		ft_print_err(char *err);
 t_render	set_images(t_game *cub3d, char *texture);
@@ -171,11 +171,11 @@ int		make_game(t_game *cub3d);
 void	movements(t_game *game);
 void	generate_image(t_game *cub3d);
 void	texture_calc(t_game *game);
-void	ft_color(t_game *game, int i, char flag);
+void	ft_putcolor(t_game *game, int i, char flag);
 void	ft_textures(t_game *game, int i);
 void	ft_init_player_pos(t_game *game);
 void	free_arr(char **arr);
-void	ft_raycast(t_game *game);
+void	raycast(t_game *game);
 void	ft_perror(char *msg, t_game *game);
 int		end_game(t_game *game);
 int		ft_keypress(int keycode, t_game *game);

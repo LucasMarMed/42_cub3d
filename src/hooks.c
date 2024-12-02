@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:22:20 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/11/01 16:05:39 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:50:30 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 int	end_game(t_game *game)
 {
 	int	i;
-	//int	j;
 
 	i = -1;
-	//j = -1;
 	free_structs(game);
 	i = -1;
 	while (++i < 4)
