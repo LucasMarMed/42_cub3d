@@ -13,32 +13,41 @@ CLEANED		=	echo "\n $(BOLD_PURPLE)Clean: $(NO_COLOR)Removed all the \".o\" files
 FCLEANED	=	echo "\n $(BOLD_PURPLE)Fclean: $(NO_COLOR)Removed the executables \n"
 
 # ------------------------------ Variables ------------------------------
-NAME = cub
-NAME_BONUS = cub3d_bonus
+NAME = cub3D
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -g
 MAKE = make -C
 RM = rm -f
-DN = > /dev/null
+DN = > /dev/null 2>&1
 
 SRC_DIR = src
 INCLUDE_DIR = include
 UTILS_DIR = utils
-LIBFT_DIR = lib/libft
-MLX_DIR = lib/mlx
-
 
 LIBFT_PATH = libft
 LFLAGS = -L ${LIBFT_PATH} -lft
-MLXFLAG = -L ${MLX_PATH} -lmlx_Linux -lbsd -lXext -lX11 -lm
+MLXFLAG = -L ${MLX_PATH} -lmlx_Linux -lXext -lX11 -lm
 MLX_PATH = minilibx-linux
 MLX_REPO = https://github.com/42Paris/minilibx-linux
 
-SRC_DIRS = src utils
-SRC =	$(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.c))
+SRC =	$(SRC_DIR)/main.c \
+			$(SRC_DIR)/check_and_parse.c \
+			$(SRC_DIR)/check_tex_path.c \
+			$(SRC_DIR)/convert_data_map.c \
+			$(SRC_DIR)/flood_fill.c \
+			$(SRC_DIR)/free.c \
+			$(SRC_DIR)/hooks.c \
+			$(SRC_DIR)/image.c \
+			$(SRC_DIR)/make_game.c \
+			$(SRC_DIR)/movements.c \
+			$(SRC_DIR)/parse_map_matrix.c \
+			$(SRC_DIR)/raycasting.c \
+			$(SRC_DIR)/texture_utils.c \
+			$(SRC_DIR)/utils.c \
+			utils/getchr.c \
+			utils/print_err.c
 
 OBJ = ${SRC:.c=.o}
-#OBJ_BONUS = ${SRC_BONUS:.c=.o}
 
 .c.o:
 	@${CC} ${FLAGS} -c $< -o ${<:.c=.o}
@@ -60,7 +69,7 @@ all: ${NAME}
 libmlx:
 	@$(COMP_START)
 	@if [ ! -d "$(MLX_PATH)" ]; then \
-		echo "$(BOLD_YELLOW)Cloning minilibx-linux repository...$(NO_COLOR)"; \
+		echo "$(BOLD_YELLOW) Cloning minilibx-linux repository...$(NO_COLOR)"; \
 		git clone $(MLX_REPO) $(MLX_PATH)$(DN); \
 	fi
 	@make -C $(MLX_PATH) $(DN)
@@ -82,7 +91,7 @@ fclean: clean
 
 re: fclean all
 
-test1: ${NAME}
-	@bash ./test/test1.sh
+leaks: 
+	valgrind --leak-check=full --show-leak-kinds=all --track-origin=yes ./cub3D maps/maps/directions/e.cub
 
-.PHONY: all clean fclean re test1 test2 leaks
+.PHONY: all clean fclean re leaks

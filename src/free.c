@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 15:35:48 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/12/02 17:07:48 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/06 06:19:48 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	free_structs(t_game *game)
 {
 	if (game->map->map_matrix)
 		free_arr(game->map->map_matrix);
-	free(game->texture);
 	if (game->map->no_texture)
 		free(game->map->no_texture);
 	if (game->map->so_texture)
@@ -44,4 +43,5 @@ void	free_structs(t_game *game)
 		free(game->map->ea_texture);
 	free(game->map);
 	free(game->player);
+	free(game->texture);
 }

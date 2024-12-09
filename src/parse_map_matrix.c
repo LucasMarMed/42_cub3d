@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 17:42:26 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/12/02 17:08:08 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:32:36 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,25 @@ static int	check_numbers(int player_count, int garbage)
 	if (garbage != 0)
 		return (ft_print_err("Error: Garbage characters on map."));
 	return (0);
+}
+
+void	player_direction(t_game *game)
+{
+	int	dir;
+
+	dir = 1;
+	if (game->player->fov == 'N')
+		game->player->dir = (t_coord){0, -dir};
+	else if (game->player->fov == 'S')
+		game->player->dir = (t_coord){0, dir};
+	else if (game->player->fov == 'W')
+		game->player->dir = (t_coord){-dir, 0};
+	else if (game->player->fov == 'E')
+		game->player->dir = (t_coord){dir, 0};
+	game->player->movement = (t_coord){0, 0};
+	game->player->plane.pos.x = -game->player->dir.y;
+	game->player->plane.pos.y = game->player->dir.x;
+	game->key = 0;
 }
 
 static int	get_dir_and_fov(t_game *game, int player_count, int garbage)
@@ -46,6 +65,7 @@ static int	get_dir_and_fov(t_game *game, int player_count, int garbage)
 				garbage++;
 		}
 	}
+	player_direction(game);
 	return (check_numbers(player_count, garbage));
 }
 

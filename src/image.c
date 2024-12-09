@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:30:18 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/12/02 17:07:58 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/06 05:41:21 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	pixel_put(t_image *img, int pixelX, int pixelY, int color)
 {
 	char	*dst;
 
+	if (pixelX < 0 || pixelX > WIDTH || pixelY < 0 || pixelY > HEIGHT)
+		return ;
 	dst = img->address + (pixelY * img->line_length
 			+ pixelX * (img->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;

@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 19:58:16 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/12/02 16:19:00 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:43:57 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
 # define WIDTH 800
 # define HEIGHT 600
 # define SPRITE_SIZE 64
-# define SPEED 0.1f
-# define ROTATION_SPEED 5
-# define BUFFER_DISTANCE 0.1f
+# define SPEED 0.02
+# define ROTATION_SPEED 0.7
+# define BUFFER_DISTANCE 0.02
 
 # define PI 3.14159265358
 
@@ -78,7 +78,7 @@ typedef struct s_player
 	char	fov;
 	t_coord	dir;
 	t_plane	plane;
-	t_coord movement;
+	t_coord	movement;
 	t_coord	pos;
 	double	move_speed;
 	double	rot_speed;
@@ -86,7 +86,7 @@ typedef struct s_player
 	double	hit_dist;
 	double	hit_x;
 	int		pitch;
-	double		angle;
+	double	angle;
 }	t_player;
 
 typedef struct s_map
@@ -152,7 +152,7 @@ typedef struct s_game
 	t_render	render[4];
 	int			key;
 	t_render	*texture;
-	t_image		 img;
+	t_image		img;
 	t_img_info	img_info;
 	t_rays		ray;
 }	t_game;
@@ -160,20 +160,19 @@ typedef struct s_game
 int		check_and_parse(t_game *game, char **path);
 int		convert_data_map(t_game *game, char *temp_raw_map);
 int		check_tex_path(t_game *game, char **path);
-int		parse_map_matrix(char** map_line, t_game *game);
+int		parse_map_matrix(char **map_line, t_game *game);
 int		flood_fill(char **map_line, t_game *game);
 char	getchr(const char *s, int c);
 void	free_structs(t_game *game);
 void	free_arr(char **arr);
 int		ft_print_err(char *err);
-t_render	set_images(t_game *cub3d, char *texture);
+void	get_img_address(t_image *img);
 int		make_game(t_game *cub3d);
 void	movements(t_game *game);
 void	generate_image(t_game *cub3d);
 void	texture_calc(t_game *game);
 void	ft_putcolor(t_game *game, int i, char flag);
 void	ft_textures(t_game *game, int i);
-void	ft_init_player_pos(t_game *game);
 void	free_arr(char **arr);
 void	raycast(t_game *game);
 void	ft_perror(char *msg, t_game *game);
@@ -181,4 +180,7 @@ int		end_game(t_game *game);
 int		ft_keypress(int keycode, t_game *game);
 int		ft_keyrelease(int keycode, t_game *game);
 int		arr_len(char **arr);
+int		check_alpha(char *line);
+int		rgb_to_hex(int *rgb);
+
 #endif

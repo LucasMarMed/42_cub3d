@@ -6,14 +6,13 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 16:20:18 by lumarque          #+#    #+#             */
-/*   Updated: 2024/12/02 17:08:14 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/09 16:35:41 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-//Set direction and calculate distance intersection
-void	ft_ray_intersections(t_game *game)
+void	ray_intersections(t_game *game)
 {
 	if (game->ray.direction.x < 0)
 	{
@@ -41,8 +40,7 @@ void	ft_ray_intersections(t_game *game)
 	}
 }
 
-//Calculate multiplier of pixel plane, and set map pos and delta distance.
-void	ft_ray_setup(t_game *game, int pixel)
+void	ray_setup(t_game *game, int pixel)
 {
 	double	multiplier;
 
@@ -61,7 +59,7 @@ void	ft_ray_setup(t_game *game, int pixel)
 		game->ray.delta.y = fabs(1 / game->ray.direction.y);
 	game->ray.map.x = (int)game->player->pos.x;
 	game->ray.map.y = (int)game->player->pos.y;
-	ft_ray_intersections(game);
+	ray_intersections(game);
 }
 
 void	dda(t_game *game)
@@ -89,7 +87,7 @@ void	dda(t_game *game)
 	}
 }
 
-void	ft_distance_to_the_wall(t_game *game)
+void	distance_to_the_wall(t_game *game)
 {
 	if (game->ray.hit_vertical == true)
 		game->ray.perp_wall_dist = (game->ray.intersection.x
@@ -119,9 +117,9 @@ void	raycast(t_game *game)
 	game->ray.hit_vertical = false;
 	while (++pixel <= ((int)WIDTH - 1))
 	{
-		ft_ray_setup(game, pixel);
+		ray_setup(game, pixel);
 		dda(game);
-		ft_distance_to_the_wall(game);
+		distance_to_the_wall(game);
 		texture_calc(game);
 		ft_putcolor(game, pixel, 'c');
 		ft_textures(game, pixel);

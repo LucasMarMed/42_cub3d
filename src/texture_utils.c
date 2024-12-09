@@ -6,7 +6,7 @@
 /*   By: lumarque <lumarque@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 17:05:07 by crocha-s          #+#    #+#             */
-/*   Updated: 2024/12/02 17:08:17 by lumarque         ###   ########.fr       */
+/*   Updated: 2024/12/06 06:28:51 by lumarque         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,10 @@ void	ft_wall_x(t_game *game)
 	game->img_info.tex_x = (int)(wall_x * (int)SPRITE_SIZE);
 }
 
-void	ft_get_img_address(t_image *img)
+void	get_img_address(t_image *img)
 {
 	img->address = mlx_get_data_addr(img->img_ptr, &img->bits_per_pixel,
 			&img->line_length, &img->endian);
-}
-
-t_render	set_images(t_game *game, char *texture)
-{
-	t_render	tex;
-
-	tex.image.img_ptr = mlx_xpm_file_to_image(game->mlx, texture, \
-		&tex.width, &tex.height);
-	if (!tex.image.img_ptr)
-		ft_perror("Error\nMalloc of sprite.image.img_ptr\n", game);
-	ft_get_img_address(&tex.image);
-	if (!tex.image.address)
-		ft_perror("Error\nMalloc of sprite.image.address\n", game);
-	return (tex);
 }
 
 void	texture_calc(t_game *game)
