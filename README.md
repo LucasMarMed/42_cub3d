@@ -1,4 +1,4 @@
-# cub3D: Immerse Yourself in a Raycasted World
+# cub3D
 
 **A first-person 3D maze explorer built with raycasting.**
 
