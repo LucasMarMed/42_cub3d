@@ -78,7 +78,10 @@ This project is inspired by the world-famous Wolfenstein 3D game, which was the 
    ``
    ./cub3D <dir/map_file.cub>
   ``
-
+4. **Example:**
+   ``
+   ./cub3D maps/maps/challenges/prova.cub
+  ``
 ## Controls
 
 You can move around the maze with ``W`` ``A`` ``S`` ``D``.
